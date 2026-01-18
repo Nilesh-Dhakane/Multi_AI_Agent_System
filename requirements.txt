@@ -1,0 +1,10 @@
+langchain-groq
+langchain-community
+langchain-text-splitters
+uvicorn
+python-dotenv
+fastapi
+streamlit
+pydantic
+langgraph
+langchain
