@@ -38,6 +38,11 @@ pipeline{
 
         stage('Debug AWS Path') {
     steps {
+
+        sh '''
+            export PATH=/usr/local/aws-cli/v2/current/bin:$PATH
+            aws --version
+            '''
         sh '''
           echo "PATH=$PATH"
           which aws || true
