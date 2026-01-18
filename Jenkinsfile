@@ -52,11 +52,11 @@ pipeline{
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-token']]) {
                     script {
-                        def accountId = sh(script: "/usr/local/bin/aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
+                        def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
                         def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
 
                         sh """
-                        usr/local/bin/aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ecrUrl}
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ecrUrl}
                         docker build -t ${env.ECR_REPO}:${IMAGE_TAG} .
                         docker tag ${env.ECR_REPO}:${IMAGE_TAG} ${ecrUrl}:${IMAGE_TAG}
                         docker push ${ecrUrl}:${IMAGE_TAG}
