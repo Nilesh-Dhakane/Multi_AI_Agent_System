@@ -36,35 +36,35 @@ pipeline{
 			}
 		}
 
-    //     stage('Debug AWS Path') {
-    // steps {
+        stage('Debug AWS Path') {
+    steps {
 
-    //     sh '''
-    //       echo "PATH=$PATH"
-    //       which aws || true
-    //       find / -name aws 2>/dev/null | head -20
-    //       aws --version
-    //     '''
-    // }
-//}
+        sh '''
+          echo "PATH=$PATH"
+          which aws || true
+          find / -name aws 2>/dev/null | head -20
+          aws --version
+        '''
+    }
+}
 
-    stage('Build and Push Docker Image to ECR') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-token']]) {
-                    script {
-                        def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
-                        def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
+    // stage('Build and Push Docker Image to ECR') {
+    //         steps {
+    //             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-token']]) {
+    //                 script {
+    //                     def accountId = sh(script: "aws sts get-caller-identity --query Account --output text", returnStdout: true).trim()
+    //                     def ecrUrl = "${accountId}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO}"
 
-                        sh """
-                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ecrUrl}
-                        docker build -t ${env.ECR_REPO}:${IMAGE_TAG} .
-                        docker tag ${env.ECR_REPO}:${IMAGE_TAG} ${ecrUrl}:${IMAGE_TAG}
-                        docker push ${ecrUrl}:${IMAGE_TAG}
-                        """
-                    }
-                }
-            }
-        }
+    //                     sh """
+    //                     aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ecrUrl}
+    //                     docker build -t ${env.ECR_REPO}:${IMAGE_TAG} .
+    //                     docker tag ${env.ECR_REPO}:${IMAGE_TAG} ${ecrUrl}:${IMAGE_TAG}
+    //                     docker push ${ecrUrl}:${IMAGE_TAG}
+    //                     """
+    //                 }
+    //             }
+    //         }
+    //     }
 
     //     stage('Deploy to ECS Fargate') {
     // steps {
