@@ -43,7 +43,6 @@ pipeline{
         sh '''
           echo "PATH=$PATH"
           which aws || true
-          find / -name aws 2>/dev/null | head -20
           aws --version
         '''
     }
